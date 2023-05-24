@@ -7,21 +7,48 @@ The current server status checks return status information within the body, alwa
 This prototype will simply return 200 if all is good, and other standard codes otherwise.
 
 ## Build & usage
-`./gradlew build` then run the server chassis as usual, from the file `build/libs/healthcheck-all.jar`
+* `./gradlew build`
+* `cd healthcheck/build/libs`
+* `cp ../../src/main/resources/truststore.p12 .`
+* `java -jar ./healthcheck.jar`
+
+Then configure and use the server as normal.
+
+Note that only a minimal chassis is configured, so only
+basic services can be used.
 
 ## API endpoints
 
-`GET /open-metadata/healthcheck/platform/health`
+`GET /open-metadata/health/platform`
 
+`GET /open-metadata/health/server/(serverName}`
+
+### Examples:
+
+#### Server not running
+```
+➜  egeria-cloudnative git:(main) ✗ http --verify=no GET https://localhost:9443/open-metadata/health/server/mds1
+HTTP/1.1 503 
+Connection: close
+Content-Length: 19
+Content-Type: text/plain;charset=UTF-8
+Date: Wed, 24 May 2023 22:10:40 GMT
+
+Service Unavailable
+```
+Server running:
+```
+➜  egeria-cloudnative git:(main) ✗ http --verify=no GET https://localhost:9443/open-metadata/health/server/mds1
+HTTP/1.1 200 
+Connection: keep-alive
+Content-Length: 2
+Content-Type: text/plain;charset=UTF-8
+Date: Wed, 24 May 2023 22:11:09 GMT
+Keep-Alive: timeout=60
+
+OK
+```
 ## Caveats & Notes
-
-### Modifying existing chassis
-The original intent was to simple add this module into the existing chassis.
-However the org.odpi.egeria:server-chassis-spring module does NOT contain the jar-with-dependencies. 
-
-Therefore the spring packaging is redone here, which has necessitated some duplication.
-
-
 
 ## See also:
  * [Discussion](https://github.com/odpi/egeria/discussions/7686)
