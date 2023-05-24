@@ -12,14 +12,15 @@ plugins {
 
 }
 
+// ensures we pick up the very latest snapshots when built
+configurations.all {
+    // check for updates every build
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
 ext {
     // TODO Update to full release - 4.1 needed to supply plain chassis jar
     egeriaversion = '4.1-SNAPSHOT'
-}
-
-repositories {
-    // TODO temporary until egeria change merged
-    mavenLocal()
 }
 
 dependencies {
@@ -35,7 +36,7 @@ dependencies {
     implementation "org.odpi.egeria:ffdc-services"
 
     // We use only the application code from the chassis, the 'plain' jar & apply springboot in this module
-    implementation "org.odpi.egeria:server-chassis-spring:plain"
+    implementation "org.odpi.egeria:server-chassis-spring:${egeriaversion}:plain"
 
     // Make this a bootable spring app
     implementation 'org.springframework.boot:spring-boot-starter-web'
