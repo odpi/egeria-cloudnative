@@ -13,27 +13,32 @@ plugins {
 }
 
 ext {
-    egeriaversion = '4.0'
+    // TODO Update to full release - 4.1 needed to supply plain chassis jar
+    egeriaversion = '4.1-SNAPSHOT'
+}
+
+repositories {
+    // TODO temporary until egeria change merged
+    mavenLocal()
 }
 
 dependencies {
-    // code dependencies for local classes
+    // Use egeria project versions constraints by default
     implementation platform("org.odpi.egeria:egeria:${egeriaversion}")
+
+    // code dependencies for local classes
     //implementation 'org.springframework:spring-web'
     implementation 'io.swagger.core.v3:swagger-annotations'
     compileOnly 'com.fasterxml.jackson.core:jackson-annotations'
 
-
-    // TODO : include the full server chassis. However currently this is NOT published by egeria to maven central
-    // runtimeOnly "org.odpi.egeria:server-chassis-spring:${egeriaversion}:jar-with-dependencies"
-    // Therefore we need to construct our own server chassis
+    // We use only the application code from the chassis, the 'plain' jar & apply springboot in this module
+    implementation "org.odpi.egeria:server-chassis-spring:${egeriaversion}:plain"
 
     // Make this a bootable spring app
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
     // Test framework
     testImplementation('org.springframework.boot:spring-boot-starter-test')
-
 
     // metrics, logging, & swagger docs
     runtimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
@@ -49,9 +54,22 @@ dependencies {
     runtimeOnly "org.odpi.egeria:repository-services-spring:${egeriaversion}"
 }
 
-bootJar {
-    mainClass = 'org.springframework.boot.loader.PropertiesLauncher'
-    }
+//bootJar {
+//    mainClass = 'org.springframework.boot.loader.PropertiesLauncher'
+//    }
+//    manifest {
+//        attributes 'Main-Class': 'org.springframework.boot.loader.PropertiesLauncher'
+//    }
 
+application {
+    mainClass = 'org.odpi.openmetadata.serverchassis.springboot.OMAGServerPlatform'
+}
 
+//shadowJar {
+//    mergeServiceFiles()
+//}
+//
+//
 //build.dependsOn("shadowJar")
+
+// Copy & extend the original jar
