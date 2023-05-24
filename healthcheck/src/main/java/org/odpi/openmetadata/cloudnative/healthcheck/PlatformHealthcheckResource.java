@@ -29,8 +29,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/open-metadata/healthcheck/platform")
 
 @Tag(name="Healthcheck Services",
-        description="The healthcheck services provide simple APIsng the Open Metadata and Governance (OMAG) Server Platform and discovering information about the OMAG Servers that it is hosting.",
-        externalDocs=@ExternalDocumentation(description="Platform Services",url="https://egeria-project.org/services/platform-services/overview"))
+        description="The healthcheck services provide simple APIs to check egeria resources are available for use",
+        externalDocs=@ExternalDocumentation(description="Egeria cloud native prototypes",url="https://github.com/odpi/egeria-cloudnative"))
 
 public class PlatformHealthcheckResource
 {
